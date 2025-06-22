@@ -2,10 +2,9 @@ const { cmd } = require("../command");
 const yts = require("yt-search");
 const { ytmp3 } = require("@vreden/youtube_scraper");
 
-// Track users waiting for reply
-const pendingChoices = {};
+const pendingChoices = {}; // global per session
 
-// SONG COMMAND
+// === SONG DOWNLOAD COMMAND ===
 cmd(
   {
     pattern: "song",
@@ -16,14 +15,12 @@ cmd(
   },
   async (angal, mek, m, { from, reply, q }) => {
     try {
-      if (!q) return reply("*😑 Please provide a song name or YouTube link!*");
+      if (!q) return reply("🎧 Please enter a song name or YouTube link.");
 
-      // Search YouTube
       const search = await yts(q);
       const data = search.videos[0];
       if (!data) return reply("❌ Song not found.");
 
-      // Validate duration
       const parts = data.timestamp.split(":").map(Number);
       const seconds = parts.length === 3
         ? parts[0] * 3600 + parts[1] * 60 + parts[2]
@@ -33,62 +30,53 @@ cmd(
 
       const songData = await ytmp3(data.url, "128");
 
-      // Send song info
       await angal.sendMessage(from, {
         image: { url: data.thumbnail },
         caption: `🎶 *ANGAL-X MP3 DOWNLOADER*\n\n📌 *Title:* ${data.title}\n🕒 *Duration:* ${data.timestamp}\n🔗 *URL:* ${data.url}\n\n_Reply with:_\n1️⃣ = Document\n2️⃣ = Audio`,
       }, { quoted: mek });
 
-      // Save state
-      pendingChoices[from] = {
-        songData,
-        data,
-        mek,
-        created: Date.now(),
-      };
+      pendingChoices[from] = { songData, data, mek };
+      console.log(`[song] Waiting for reply from: ${from}`);
+
     } catch (e) {
-      console.error("Song command error:", e);
-      reply("❌ Failed to fetch or send the song.");
+      console.error("SONG ERROR:", e);
+      reply("❌ Error downloading song.");
     }
   }
 );
 
-// 🧠 REPLY HANDLER
+// === FORMAT CHOICE HANDLER ===
 const handlePendingChoice = async (angal, m) => {
   const from = m.key.remoteJid;
-
-  // Only run if user has pending choice
   if (!pendingChoices[from]) return false;
 
   const text =
     m.message?.conversation ||
     m.message?.extendedTextMessage?.text ||
     "";
-  const input = text.trim().toLowerCase();
 
-  const choice = (input === "1" || input === "document")
-    ? "document"
-    : (input === "2" || input === "audio")
-    ? "audio"
-    : null;
+  const choice = text.trim();
 
-  // If invalid, clear and warn once
-  if (!choice) {
+  console.log("[PendingChoice] User replied:", choice);
+
+  const isDoc = choice === "1" || choice.toLowerCase() === "document";
+  const isAud = choice === "2" || choice.toLowerCase() === "audio";
+
+  if (!isDoc && !isAud) {
     await angal.sendMessage(from, {
       text: "❌ Invalid choice. Reply with `1` (Document) or `2` (Audio)."
     }, { quoted: m });
-
-    // 💥 Fix spam: clear so it doesn’t repeat!
     delete pendingChoices[from];
     return true;
   }
 
   const { songData, data, mek } = pendingChoices[from];
+  delete pendingChoices[from];
 
   try {
     await angal.sendMessage(
       from,
-      choice === "document"
+      isDoc
         ? {
             document: { url: songData.download.url },
             mimetype: "audio/mpeg",
@@ -102,18 +90,15 @@ const handlePendingChoice = async (angal, m) => {
     );
 
     await angal.sendMessage(from, {
-      text: `✅ Sent as ${choice === "document" ? "📁 Document" : "🎵 Audio"}!`,
+      text: `✅ Sent as ${isDoc ? "📁 Document" : "🎵 Audio"}!`,
     }, { quoted: m });
-  } catch (err) {
-    console.error("Send error:", err);
-    await angal.sendMessage(from, {
-      text: "❌ Failed to send the file."
-    }, { quoted: m });
-  }
 
-  // ✅ Always remove after handling
-  delete pendingChoices[from];
-  return true;
+    return true;
+  } catch (err) {
+    console.error("SEND ERROR:", err);
+    await angal.sendMessage(from, { text: "❌ Error sending the song." }, { quoted: m });
+    return true;
+  }
 };
 
 module.exports = {

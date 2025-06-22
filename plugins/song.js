@@ -1,1 +1,125 @@
-const _0x36f00a=_0x400a;function _0x400a(_0x4d6a41,_0x107aa5){const _0x1c11fd=_0x1c11();return _0x400a=function(_0x400a70,_0x24b1f8){_0x400a70=_0x400a70-0x1f1;let _0x3aaf8f=_0x1c11fd[_0x400a70];return _0x3aaf8f;},_0x400a(_0x4d6a41,_0x107aa5);}(function(_0x1a7886,_0x3b56ea){const _0x405270=_0x400a,_0x288bca=_0x1a7886();while(!![]){try{const _0x61e54e=parseInt(_0x405270(0x1f4))/0x1*(-parseInt(_0x405270(0x204))/0x2)+parseInt(_0x405270(0x1f2))/0x3*(parseInt(_0x405270(0x1f9))/0x4)+parseInt(_0x405270(0x1fb))/0x5+parseInt(_0x405270(0x1f6))/0x6*(-parseInt(_0x405270(0x20f))/0x7)+parseInt(_0x405270(0x202))/0x8+parseInt(_0x405270(0x203))/0x9*(-parseInt(_0x405270(0x207))/0xa)+parseInt(_0x405270(0x1f8))/0xb;if(_0x61e54e===_0x3b56ea)break;else _0x288bca['push'](_0x288bca['shift']());}catch(_0x3209e0){_0x288bca['push'](_0x288bca['shift']());}}}(_0x1c11,0x6b852));const {cmd,commands}=require('../command'),yts=require(_0x36f00a(0x1f3)),{ytmp3}=require(_0x36f00a(0x1fe));function _0x1c11(){const _0x11bdf9=['1246945uvfqqI','url','audio/mpeg','@vreden/youtube_scraper','description','⏱️\x20audio\x20limit\x20is\x2030\x20minutes','views','5364808RndMCG','7000893NTEACC','791026iIdwal','message','title','10OfvqWq','\x0a👻\x20*Url*\x20:\x20','ago','\x0a👻\x20*Time*\x20:\x20','\x0a\x0a\x0a*Your\x20Song\x20Is\x20Uploading...📤*\x0a\x0a*Developer*-\x20*Thinura_Nethz*\x0a','length','split','❌\x20Error:\x20','9114naafWi','*PLEASE\x20PROVIDE\x20LINK\x20OR\x20SONG\x20NAME*\x20:😑','map','\x0a👻\x20*Ago*\x20:\x20','download','39dDKfiG','yt-search','1gJaXrQ','timestamp','1230pQOEin','thumbnail','3380795ofSLha','201036LCyJNN','song'];_0x1c11=function(){return _0x11bdf9;};return _0x1c11();}cmd({'pattern':_0x36f00a(0x1fa),'react':'🎵','desc':'Download\x20Song','category':_0x36f00a(0x1f1),'filename':__filename},async(_0x5adaf0,_0x1f599f,_0x10865a,{from:_0x474a37,quoted:_0x5dfdf0,body:_0x21fd16,isCmd:_0x1bc924,command:_0x532f67,args:_0x18efa6,q:_0x567af3,isGroup:_0x2c6fc4,sender:_0x582644,senderNumber:_0x11fa02,botNumber2:_0x473521,botNumber:_0x4daae5,pushname:_0x5f0201,isMe:_0x1fbe2c,isOwner:_0x11940c,groupMetadata:_0x4d6a84,groupName:_0xa27c36,participants:_0x2ef87e,groupAdmins:_0x45594b,isBotAdmins:_0xdaefaa,isAdmins:_0x193692,reply:_0xcb0f1})=>{const _0xf44aa5=_0x36f00a;try{if(!_0x567af3)return _0xcb0f1(_0xf44aa5(0x210));const _0x811564=await yts(_0x567af3),_0x42361a=_0x811564['videos'][0x0],_0xe3f52a=_0x42361a[_0xf44aa5(0x1fc)];let _0x231d7c='\x0a*ANGAL-X\x20SONG\x20DOWNLOADER*\x0a\x0a👻\x20*Title*\x20:\x20'+_0x42361a[_0xf44aa5(0x206)]+'\x0a👻\x20*Description*\x20:\x20'+_0x42361a[_0xf44aa5(0x1ff)]+_0xf44aa5(0x20a)+_0x42361a[_0xf44aa5(0x1f5)]+_0xf44aa5(0x212)+_0x42361a[_0xf44aa5(0x209)]+'\x0a👻\x20*Views*\x20:\x20'+_0x42361a[_0xf44aa5(0x201)]+_0xf44aa5(0x208)+_0x42361a['url']+_0xf44aa5(0x20b);await _0x5adaf0['sendMessage'](_0x474a37,{'image':{'url':_0x42361a[_0xf44aa5(0x1f7)]},'caption':_0x231d7c},{'quoted':_0x1f599f});const _0x307bd6='128',_0x53082b=await ytmp3(_0xe3f52a,_0x307bd6);let _0x3e3e85=_0x42361a[_0xf44aa5(0x1f5)][_0xf44aa5(0x20d)](':')[_0xf44aa5(0x211)](Number),_0x53a8d8=_0x3e3e85[_0xf44aa5(0x20c)]===0x3?_0x3e3e85[0x0]*0xe10+_0x3e3e85[0x1]*0x3c+_0x3e3e85[0x2]:_0x3e3e85[0x0]*0x3c+_0x3e3e85[0x1];if(_0x53a8d8>0x708)return _0xcb0f1(_0xf44aa5(0x200));return await _0x5adaf0['sendMessage'](_0x474a37,{'audio':{'url':_0x53082b[_0xf44aa5(0x1f1)][_0xf44aa5(0x1fc)]},'mimetype':_0xf44aa5(0x1fd)},{'quoted':_0x1f599f}),_0xcb0f1('*Thanks\x20for\x20using\x20AngalX*\x20\x0a\x20*mp3\x20Downloader*\x20❤️');}catch(_0x42e57a){console['log'](_0x42e57a),_0xcb0f1(_0xf44aa5(0x20e)+_0x42e57a[_0xf44aa5(0x205)]);}});
+const { cmd, commands } = require("../command");
+const yts = require("yt-search");
+const { ytmp3 } = require("@vreden/youtube_scraper");
+
+cmd(
+  {
+    pattern: "song",
+    react: "🎵",
+    desc: "Download Song",
+    category: "download",
+    filename: __filename,
+  },
+  async (
+    angal,
+    mek,
+    m,
+    {
+      from,
+      quoted,
+      body,
+      isCmd,
+      command,
+      args,
+      q,
+      isGroup,
+      sender,
+      reply,
+    }
+  ) => {
+    try {
+      if (!q) return reply("*PLEASE PROVIDE LINK OR SONG NAME* :😑");
+
+      // Search for the video
+      const search = await yts(q);
+      const data = search.videos[0];
+      if (!data) return reply("❌ No video found for your query.");
+
+      const url = data.url;
+
+      // Song metadata description
+      let desc = `
+*ANGAL-X SONG DOWNLOADER*
+
+👻 *Title* : ${data.title}
+👻 *Description* : ${data.description || "No description"}
+👻 *Duration* : ${data.timestamp}
+👻 *Uploaded* : ${data.ago}
+👻 *Views* : ${data.views}
+👻 *Url* : ${data.url}
+
+*Your Song Is Uploading...📤*
+
+Developer- Thinura_Nethz
+`;
+
+      // Send metadata thumbnail message
+      await angal.sendMessage(
+        from,
+        { image: { url: data.thumbnail }, caption: desc },
+        { quoted: mek }
+      );
+
+      // Validate song duration (limit: 30 minutes)
+      let durationParts = data.timestamp.split(":").map(Number);
+      let totalSeconds =
+        durationParts.length === 3
+          ? durationParts[0] * 3600 + durationParts[1] * 60 + durationParts[2]
+          : durationParts[0] * 60 + durationParts[1];
+
+      if (totalSeconds > 1800) {
+        return reply("⏱️ Audio limit is 30 minutes");
+      }
+
+      // Download the audio
+      const quality = "128"; // Default quality
+      const songData = await ytmp3(url, quality);
+
+      // Ask user for preferred audio type with numbers
+      await reply(
+        "📁 Choose the song format:\n1️⃣ Document\n2️⃣ Audio\n\n_Reply with_: `1` or `2`"
+      );
+
+      // Listen once for the next user message to get the choice
+      angal.once("message", async (responseMsg) => {
+        try {
+          const choiceRaw = responseMsg.message?.conversation?.trim();
+          let choice;
+          if (choiceRaw === "1" || choiceRaw.toLowerCase() === "document") choice = "document";
+          else if (choiceRaw === "2" || choiceRaw.toLowerCase() === "audio") choice = "audio";
+          else {
+            return reply("❌ Invalid choice. Please type `1` for Document or `2` for Audio.");
+          }
+
+          const sendAsDocument = choice === "document";
+
+          // Send audio file based on choice
+          await angal.sendMessage(
+            from,
+            sendAsDocument
+              ? {
+                  document: { url: songData.download.url },
+                  mimetype: "audio/mpeg",
+                  fileName: `${data.title}.mp3`,
+                }
+              : {
+                  audio: { url: songData.download.url },
+                  mimetype: "audio/mpeg",
+                },
+            { quoted: mek }
+          );
+
+          return reply(
+            "*✅ File sent as* " + (sendAsDocument ? "📁 Document" : "🎵 Audio") + "!"
+          );
+        } catch (err) {
+          console.error(err);
+          return reply("❌ Something went wrong sending the file.");
+        }
+      });
+    } catch (e) {
+      console.log(e);
+      reply(`❌ Error: ${e.message}`);
+    }
+  }
+);

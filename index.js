@@ -1,4 +1,3 @@
-// == REQUIRED LIBRARIES ==
 const {
   default: makeWASocket,
   useMultiFileAuthState,
@@ -13,20 +12,20 @@ const fs = require('fs');
 const P = require('pino');
 const config = require('./config');
 const qrcode = require('qrcode-terminal');
-const { sms, downloadMediaMessage } = require('./lib/msg');
-const { getBuffer, getGroupAdmins } = require('./lib/functions');
-const axios = require('axios');
+const { sms } = require('./lib/msg');
+const { getGroupAdmins } = require('./lib/functions');
 const { File } = require('megajs');
-const prefix = '.';
-const ownerNumber = ['94774571418'];
 const express = require("express");
 const app = express();
 const port = process.env.PORT || 8000;
 
-// ✅ SONG HANDLER
+const prefix = '.';
+const ownerNumber = ['94774571418'];
+
+// ✅ Song reply handler
 const { handlePendingChoice } = require("./plugins/song");
 
-// == SESSION SETUP ==
+// === SESSION DOWNLOAD ===
 if (!fs.existsSync(__dirname + '/auth_info_baileys/creds.json')) {
   if (!config.SESSION_ID) return console.log('Please add your session to SESSION_ID env !!');
   const sessdata = config.SESSION_ID;
@@ -39,7 +38,7 @@ if (!fs.existsSync(__dirname + '/auth_info_baileys/creds.json')) {
   });
 }
 
-// == MAIN FUNCTION ==
+// === CONNECT TO WHATSAPP ===
 async function connectToWA() {
   console.log("Connecting AngalX bot 🧬...");
   const { state, saveCreds } = await useMultiFileAuthState(__dirname + '/auth_info_baileys/');
@@ -72,7 +71,6 @@ async function connectToWA() {
       console.log('✅ Plugins installed');
       console.log('✅ AngalX connected to WhatsApp');
 
-      // Notify Owner
       await conn.sendMessage(ownerNumber[0] + "@s.whatsapp.net", {
         image: {
           url: `https://raw.githubusercontent.com/Thinura-Nethz/HELP/refs/heads/main/ChatGPT%20Image%20Jun%2015%2C%202025%2C%2004_55_04%20PM.png`
@@ -84,23 +82,22 @@ async function connectToWA() {
 
   conn.ev.on('creds.update', saveCreds);
 
-  // == MESSAGE HANDLER ==
+  // === MESSAGE HANDLER ===
   conn.ev.on('messages.upsert', async (msg) => {
-    let mek = msg.messages[0];
+    const mek = msg.messages[0];
     if (!mek.message) return;
 
     const from = mek.key.remoteJid;
 
-    // ✅ Handle reply to .song (1 or 2)
+    // ✅ Handle song reply choices FIRST
     const handled = await handlePendingChoice(conn, mek);
     if (handled) return;
 
-    // Process ephemeral message
+    // Remove ephemeral wrapper
     if (getContentType(mek.message) === 'ephemeralMessage') {
       mek.message = mek.message.ephemeralMessage.message;
     }
 
-    // Format for plugins
     const m = sms(conn, mek);
     const type = getContentType(mek.message);
     const body =
@@ -111,11 +108,10 @@ async function connectToWA() {
       '';
 
     const isCmd = body.startsWith(prefix);
-    const command = isCmd ? body.slice(prefix.length).trim().split(' ')[0].toLowerCase() : '';
+    const command = isCmd ? body.slice(prefix.length).split(' ')[0].toLowerCase() : '';
     const args = body.trim().split(/\s+/).slice(1);
     const q = args.join(" ");
 
-    // Group & user info
     const isGroup = from.endsWith('@g.us');
     const sender = mek.key.fromMe ? conn.user.id.split(':')[0] + '@s.whatsapp.net' : (mek.key.participant || from);
     const senderNumber = sender.split('@')[0];
@@ -134,14 +130,14 @@ async function connectToWA() {
 
     const reply = (text) => conn.sendMessage(from, { text }, { quoted: mek });
 
-    // Access rules
+    // Access Mode Rules
     if (!isOwner && config.MODE === "public") return;
     if (!isOwner && isGroup && config.MODE === "inbox") return;
     if (!isOwner && !isGroup && config.MODE === "groups") return;
 
-    // Plugin Commands
+    // === COMMAND EXECUTION ===
     const events = require('./command');
-    const cmdName = isCmd ? body.slice(1).split(" ")[0].toLowerCase() : false;
+    const cmdName = isCmd ? command : '';
     if (isCmd) {
       const cmd = events.commands.find((c) => c.pattern === cmdName) || events.commands.find((c) => c.alias?.includes(cmdName));
       if (cmd) {
@@ -162,14 +158,14 @@ async function connectToWA() {
   });
 }
 
-// == EXPRESS ENDPOINT ==
+// === EXPRESS SERVER ===
 app.get("/", (req, res) => {
   res.send("🤖 AngalX Bot is running.");
 });
 
 app.listen(port, () => console.log(`🌐 Server live: http://localhost:${port}`));
 
-// == START BOT ==
+// === START BOT ===
 setTimeout(() => {
   connectToWA();
 }, 4000);

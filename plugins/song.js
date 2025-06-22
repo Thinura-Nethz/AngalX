@@ -1,151 +1,130 @@
-// At the top of your plugin or bot main file:
-const pendingChoices = {}; // Keeps track of users waiting to choose file type
-
-// Your song command plugin
+// plugins/song.js
 const { cmd } = require("../command");
 const yts = require("yt-search");
 const { ytmp3 } = require("@vreden/youtube_scraper");
 
+const pendingChoices = {}; // Tracks which users are choosing format
+
+// Song Command
 cmd(
   {
     pattern: "song",
     react: "🎵",
-    desc: "Download Song",
+    desc: "Download Song from YouTube",
     category: "download",
     filename: __filename,
   },
-  async (angal, mek, m, { from, reply, q }) => {
+  async (bot, msg, m, { from, reply, q }) => {
     try {
-      if (!q) return reply("*PLEASE PROVIDE LINK OR SONG NAME* :😑");
+      if (!q) return reply("Please provide a YouTube link or song name.");
 
-      // Search YouTube
       const search = await yts(q);
       const data = search.videos[0];
-      if (!data) return reply("❌ No video found for your query.");
+      if (!data) return reply("No video found for your query.");
 
-      // Validate duration (30 minutes max)
-      let durationParts = data.timestamp.split(":").map(Number);
-      let totalSeconds =
-        durationParts.length === 3
-          ? durationParts[0] * 3600 + durationParts[1] * 60 + durationParts[2]
-          : durationParts[0] * 60 + durationParts[1];
+      const parts = data.timestamp.split(":").map(Number);
+      const duration = parts.length === 3
+        ? parts[0] * 3600 + parts[1] * 60 + parts[2]
+        : parts[0] * 60 + parts[1];
 
-      if (totalSeconds > 1800) return reply("⏱️ Audio limit is 30 minutes");
+      if (duration > 1800) return reply("Audio is longer than 30 minutes.");
 
-      // Download audio
       const quality = "128";
       const songData = await ytmp3(data.url, quality);
 
-      // Send metadata + thumbnail
-      let desc = `
-*ANGAL-X SONG DOWNLOADER*
+      if (!songData || !songData.download?.url) {
+        return reply("Failed to fetch download URL.");
+      }
 
-👻 *Title* : ${data.title}
-👻 *Duration* : ${data.timestamp}
-👻 *Uploaded* : ${data.ago}
-👻 *Views* : ${data.views}
-👻 *Url* : ${data.url}
+      const caption = `
+ANGAL-X SONG DOWNLOADER
 
-*Your Song Is Uploading...📤*
+Title    : ${data.title}
+Duration : ${data.timestamp}
+Uploaded : ${data.ago}
+Views    : ${data.views}
+Url      : ${data.url}
 
-Developer- Thinura_Nethz
-`;
-      await angal.sendMessage(
-        from,
-        { image: { url: data.thumbnail }, caption: desc },
-        { quoted: mek }
-      );
+Your song is uploading...
 
-      // Save pending choice state for this user
-      pendingChoices[from] = { songData, data, mek };
+Developer - Thinura_Nethz
+      `;
 
-      // Ask user to choose
-      await reply(
-        "📁 Choose the song format:\n1️⃣ Document\n2️⃣ Audio\n\n_Reply with_: `1` or `2`"
-      );
-    } catch (e) {
-      console.log(e);
-      reply(`❌ Error: ${e.message}`);
+      await bot.sendMessage(from, { image: { url: data.thumbnail }, caption }, { quoted: msg });
+
+      pendingChoices[from] = { songData, data, msg };
+
+      await reply("Choose the format:\n1. Document\n2. Audio\n\nReply with: 1 or 2");
+
+      setTimeout(() => {
+        if (pendingChoices[from]) delete pendingChoices[from];
+      }, 5 * 60 * 1000); // Clear after 5 minutes
+
+    } catch (err) {
+      console.error(err);
+      reply("Error: " + err.message);
     }
   }
 );
 
-// ------------------------------
-// In your global message handler (where you receive all incoming messages):
-// Call this function for every incoming message `m`
-
-async function handlePendingChoice(angal, m) {
+// Export the choice handler for global use
+module.exports.handlePendingChoice = async function (bot, m) {
   const from = m.key.remoteJid;
-
-  if (!pendingChoices[from]) return false; // no pending choice, continue normal flow
-
-  const { songData, data, mek } = pendingChoices[from];
-
-  const text =
+  const choiceText =
     m.message?.conversation ||
-    m.message?.extendedTextMessage?.text ||
-    "";
-  const choiceRaw = text.trim();
+    m.message?.extendedTextMessage?.text || "";
 
-  let choice;
-  if (choiceRaw === "1" || choiceRaw.toLowerCase() === "document") choice = "document";
-  else if (choiceRaw === "2" || choiceRaw.toLowerCase() === "audio") choice = "audio";
+  if (!pendingChoices[from]) return false;
+
+  const { songData, data, msg } = pendingChoices[from];
+  const choice = choiceText.trim();
+
+  let asDocument = false;
+  if (choice === "1") asDocument = true;
+  else if (choice === "2") asDocument = false;
   else {
-    await angal.sendMessage(
+    await bot.sendMessage(
       from,
-      { text: "❌ Invalid choice. Please type `1` for Document or `2` for Audio." },
+      { text: "Invalid option. Type 1 for Document or 2 for Audio." },
       { quoted: m }
     );
-    return true; // handled message
+    return true;
   }
 
-  const sendAsDocument = choice === "document";
-
   try {
-    await angal.sendMessage(
-      from,
-      sendAsDocument
-        ? {
-            document: { url: songData.download.url },
-            mimetype: "audio/mpeg",
-            fileName: `${data.title}.mp3`,
-          }
-        : {
-            audio: { url: songData.download.url },
-            mimetype: "audio/mpeg",
-          },
-      { quoted: mek }
-    );
+    if (asDocument) {
+      await bot.sendMessage(
+        from,
+        {
+          document: { url: songData.download.url },
+          mimetype: "audio/mpeg",
+          fileName: `${data.title}.mp3`,
+        },
+        { quoted: msg }
+      );
+    } else {
+      await bot.sendMessage(
+        from,
+        {
+          audio: { url: songData.download.url },
+          mimetype: "audio/mpeg",
+        },
+        { quoted: msg }
+      );
+    }
 
-    await angal.sendMessage(
+    await bot.sendMessage(
       from,
       {
-        text: "*✅ File sent as* " + (sendAsDocument ? "📁 Document" : "🎵 Audio") + "!",
+        text: `File sent as ${asDocument ? "Document" : "Audio"}.`,
       },
       { quoted: m }
     );
   } catch (err) {
-    console.error(err);
-    await angal.sendMessage(
-      from,
-      { text: "❌ Something went wrong sending the file." },
-      { quoted: m }
-    );
+    console.error("Send error:", err);
+    await bot.sendMessage(from, { text: "Failed to send the file." }, { quoted: m });
   }
 
-  delete pendingChoices[from]; // clear pending choice after done
-
-  return true; // handled the message
-}
-
-// ------------------------------
-// Example integration inside your main message handler (simplified):
-
-// async function onMessage(angal, m) {
-//   // Check if user has pending choice
-//   const handled = await handlePendingChoice(angal, m);
-//   if (handled) return; // stop further processing
-
-//   // Your normal command processing here...
-// }
-
+  delete pendingChoices[from];
+  return true;
+};

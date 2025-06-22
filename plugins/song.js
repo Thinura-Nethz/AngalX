@@ -2,7 +2,7 @@ const { cmd } = require("../command");
 const yts = require("yt-search");
 const { ytmp3 } = require("@vreden/youtube_scraper");
 
-const pendingChoices = {};
+const pendingChoices = {}; // To track pending format replies
 
 // === SONG COMMAND ===
 cmd(
@@ -21,6 +21,7 @@ cmd(
       const data = search.videos[0];
       if (!data) return reply("❌ Song not found.");
 
+      // Check duration
       const parts = data.timestamp.split(":").map(Number);
       const seconds = parts.length === 3
         ? parts[0] * 3600 + parts[1] * 60 + parts[2]
@@ -30,15 +31,13 @@ cmd(
 
       const songData = await ytmp3(data.url, "128");
 
-      await angal.sendMessage(
-        from,
-        {
-          image: { url: data.thumbnail },
-          caption: `🎶 *ANGAL-X MP3 DOWNLOADER*\n\n📌 *Title:* ${data.title}\n🕒 *Duration:* ${data.timestamp}\n🔗 *URL:* ${data.url}\n\n_Reply with:_\n\n1️⃣ = 📁 Document\n2️⃣ = 🎵 Audio`,
-        },
-        { quoted: mek }
-      );
+      // Send message with format options
+      await angal.sendMessage(from, {
+        image: { url: data.thumbnail },
+        caption: `🎶 *ANGAL-X MP3 DOWNLOADER*\n\n📌 *Title:* ${data.title}\n🕒 *Duration:* ${data.timestamp}\n🔗 *URL:* ${data.url}\n\n_Reply with:_\n\n1️⃣ = *Document*\n2️⃣ = *Audio*`,
+      }, { quoted: mek });
 
+      // Track reply waiting
       pendingChoices[from] = {
         songData,
         data,
@@ -54,23 +53,31 @@ cmd(
   }
 );
 
-// === HANDLE FORMAT REPLY ===
+// === HANDLE USER REPLY ===
 const handlePendingChoice = async (angal, m) => {
   const from = m.key.remoteJid;
   if (!pendingChoices[from]) return false;
 
   const extractText = (msg) => {
-    const types = [
-      msg?.message?.conversation,
-      msg?.message?.extendedTextMessage?.text,
-      msg?.message?.buttonsResponseMessage?.selectedButtonId,
-      msg?.message?.listResponseMessage?.singleSelectReply?.selectedRowId,
-      msg?.message?.templateButtonReplyMessage?.selectedId,
-      msg?.message?.interactiveResponseMessage?.body?.text,
-    ];
+    try {
+      const message = msg.message || {};
+      const textSources = [
+        message?.conversation,
+        message?.extendedTextMessage?.text,
+        message?.buttonsResponseMessage?.selectedButtonId,
+        message?.listResponseMessage?.singleSelectReply?.selectedRowId,
+        message?.templateButtonReplyMessage?.selectedId,
+        message?.interactiveResponseMessage?.body?.text,
+        message?.imageMessage?.caption,
+        message?.videoMessage?.caption,
+      ];
 
-    const text = types.find(Boolean) || "";
-    return text.trim().toLowerCase().replace(/[^a-z0-9]/gi, "");
+      const extracted = textSources.find((x) => typeof x === "string" && x.trim().length > 0);
+      return extracted ? extracted.trim().toLowerCase().replace(/[^a-z0-9]/gi, "") : "";
+    } catch (err) {
+      console.error("Text extraction error:", err);
+      return "";
+    }
   };
 
   const choice = extractText(m);
@@ -81,15 +88,15 @@ const handlePendingChoice = async (angal, m) => {
 
   if (!isDoc && !isAud) {
     await angal.sendMessage(from, {
-      text: "❌ Invalid choice. Reply with `1` (Document) or `2` (Audio)."
+      text: "❌ Invalid choice.\nPlease reply with:\n`1` = 📁 Document\n`2` = 🎵 Audio"
     }, { quoted: m });
 
-    delete pendingChoices[from];
+    delete pendingChoices[from]; // Clear to avoid spam loop
     return true;
   }
 
   const { songData, data, mek } = pendingChoices[from];
-  delete pendingChoices[from];
+  delete pendingChoices[from]; // ✅ Done handling
 
   try {
     await angal.sendMessage(

@@ -2,9 +2,9 @@ const { cmd } = require("../command");
 const yts = require("yt-search");
 const { ytmp3 } = require("@vreden/youtube_scraper");
 
-const pendingChoices = {}; // global per session
+const pendingChoices = {}; // Store pending song replies
 
-// === SONG DOWNLOAD COMMAND ===
+// === SONG COMMAND ===
 cmd(
   {
     pattern: "song",
@@ -35,9 +35,14 @@ cmd(
         caption: `🎶 *ANGAL-X MP3 DOWNLOADER*\n\n📌 *Title:* ${data.title}\n🕒 *Duration:* ${data.timestamp}\n🔗 *URL:* ${data.url}\n\n_Reply with:_\n1️⃣ = Document\n2️⃣ = Audio`,
       }, { quoted: mek });
 
-      pendingChoices[from] = { songData, data, mek };
-      console.log(`[song] Waiting for reply from: ${from}`);
+      pendingChoices[from] = {
+        songData,
+        data,
+        mek,
+        created: Date.now(),
+      };
 
+      console.log(`[song] Waiting for reply from: ${from}`);
     } catch (e) {
       console.error("SONG ERROR:", e);
       reply("❌ Error downloading song.");
@@ -45,33 +50,40 @@ cmd(
   }
 );
 
-// === FORMAT CHOICE HANDLER ===
+// === HANDLE FORMAT REPLY ===
 const handlePendingChoice = async (angal, m) => {
   const from = m.key.remoteJid;
   if (!pendingChoices[from]) return false;
 
-  const text =
-    m.message?.conversation ||
-    m.message?.extendedTextMessage?.text ||
-    "";
+  const extractText = (msg) => {
+    return (
+      msg?.message?.conversation ||
+      msg?.message?.extendedTextMessage?.text ||
+      msg?.message?.buttonsResponseMessage?.selectedButtonId ||
+      msg?.message?.listResponseMessage?.singleSelectReply?.selectedRowId ||
+      msg?.message?.templateButtonReplyMessage?.selectedId ||
+      msg?.message?.interactiveResponseMessage?.body?.text ||
+      ""
+    ).trim().toLowerCase();
+  };
 
-  const choice = text.trim();
-
+  const choice = extractText(m);
   console.log("[PendingChoice] User replied:", choice);
 
-  const isDoc = choice === "1" || choice.toLowerCase() === "document";
-  const isAud = choice === "2" || choice.toLowerCase() === "audio";
+  const isDoc = choice === "1" || choice === "document";
+  const isAud = choice === "2" || choice === "audio";
 
   if (!isDoc && !isAud) {
     await angal.sendMessage(from, {
       text: "❌ Invalid choice. Reply with `1` (Document) or `2` (Audio)."
     }, { quoted: m });
-    delete pendingChoices[from];
+
+    delete pendingChoices[from]; // 🧹 Clean to avoid spam
     return true;
   }
 
   const { songData, data, mek } = pendingChoices[from];
-  delete pendingChoices[from];
+  delete pendingChoices[from]; // ✅ Clean after handling
 
   try {
     await angal.sendMessage(
@@ -96,7 +108,9 @@ const handlePendingChoice = async (angal, m) => {
     return true;
   } catch (err) {
     console.error("SEND ERROR:", err);
-    await angal.sendMessage(from, { text: "❌ Error sending the song." }, { quoted: m });
+    await angal.sendMessage(from, {
+      text: "❌ Error sending the song file.",
+    }, { quoted: m });
     return true;
   }
 };

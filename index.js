@@ -1,1 +1,164 @@
-const _0x500ea3=_0x52dc;function _0x52dc(_0x5f540c,_0x12831f){const _0x4c99ed=_0x4c99();return _0x52dc=function(_0x52dca1,_0x5a660a){_0x52dca1=_0x52dca1-0xc3;let _0x275088=_0x4c99ed[_0x52dca1];return _0x275088;},_0x52dc(_0x5f540c,_0x12831f);}function _0x4c99(){const _0x245f53=['connection.update','map','https://mega.nz/file/','axios','true','qrcode-terminal','length','participants','9008AvZjGO','head','sendFileUrl','catch','toLowerCase','@whiskeysockets/baileys','AngalX\x20connected\x20successful\x20✅\x0a\x0aPREFIX:\x20','video/mp4','get','public','util','./lib/msg','groups','user','split','subject','statusCode','body','228BOCdUQ','/auth_info_baileys/','silent','extname','extendedTextMessage','shift','./lib/functions','13149EtRIOL','existsSync','forEach','3018065nVKtgA','./plugins/','output','contextInfo','Hey,\x20Bot\x20Started✅','94774571418','slice','video','Plugins\x20installed\x20successful\x20✅','photo','sticker','gif','text','ephemeralMessage','sendMessage','env','37236340wJEwwT','megajs','join','endsWith','fromURL','videoMessage','includes','Sin\x20Nombre','8dKhePP','AUTO_READ_STATUS','close','error','open','AngalX\x20connected\x20to\x20whatsapp\x20✅','alias','quotedMessage','@g.us','trim','796140JzAlLd','readMessages','messages.upsert','SESSION_ID','groupMetadata','audio/mpeg','34111RlzZYK','Connecting\x20AngalX\x20bot\x20🧬...','imageMessage','function','path','206318QaqVTZ','Firefox','remoteJid','express','content-type','download','stickerMessage','./config','log','react','pushName','type','😼\x20Installing...\x20','send','startsWith','writeFile','/auth_info_baileys/creds.json','headers','readdirSync','messages','515014ZdPjIm','key','creds.update','Please\x20add\x20your\x20session\x20to\x20SESSION_ID\x20env\x20!!','Session\x20downloaded\x20✅','caption','pattern','conversation','./command','listen','message','MODE','application/pdf','macOS','commands','participant'];_0x4c99=function(){return _0x245f53;};return _0x4c99();}(function(_0x119a8f,_0x1762a2){const _0x10cc3c=_0x52dc,_0x2b31c0=_0x119a8f();while(!![]){try{const _0x50b303=parseInt(_0x10cc3c(0xdf))/0x1+-parseInt(_0x10cc3c(0xcb))/0x2+-parseInt(_0x10cc3c(0x135))/0x3+-parseInt(_0x10cc3c(0x12b))/0x4*(parseInt(_0x10cc3c(0x113))/0x5)+-parseInt(_0x10cc3c(0x109))/0x6*(parseInt(_0x10cc3c(0xc6))/0x7)+-parseInt(_0x10cc3c(0xf7))/0x8*(parseInt(_0x10cc3c(0x110))/0x9)+parseInt(_0x10cc3c(0x123))/0xa;if(_0x50b303===_0x1762a2)break;else _0x2b31c0['push'](_0x2b31c0['shift']());}catch(_0x16ef4b){_0x2b31c0['push'](_0x2b31c0['shift']());}}}(_0x4c99,0xcb46f));const {default:makeWASocket,useMultiFileAuthState,DisconnectReason,jidNormalizedUser,getContentType,fetchLatestBaileysVersion,Browsers}=require(_0x500ea3(0xfc)),{getBuffer,getGroupAdmins,getRandom,h2k,isUrl,Json,runtime,sleep,fetchJson}=require(_0x500ea3(0x10f)),fs=require('fs'),P=require('pino'),config=require(_0x500ea3(0xd2)),qrcode=require(_0x500ea3(0xf4)),util=require(_0x500ea3(0x101)),{sms,downloadMediaMessage}=require(_0x500ea3(0x102)),axios=require(_0x500ea3(0xf2)),{File}=require(_0x500ea3(0x124)),prefix='.',ownerNumber=[_0x500ea3(0x118)];if(!fs[_0x500ea3(0x111)](__dirname+_0x500ea3(0xdb))){if(!config[_0x500ea3(0xc3)])return console[_0x500ea3(0xd3)](_0x500ea3(0xe2));const sessdata=config[_0x500ea3(0xc3)],filer=File[_0x500ea3(0x127)](_0x500ea3(0xf1)+sessdata);filer[_0x500ea3(0xd0)]((_0x149301,_0x57fa00)=>{const _0x51bbe1=_0x500ea3;if(_0x149301)throw _0x149301;fs[_0x51bbe1(0xda)](__dirname+_0x51bbe1(0xdb),_0x57fa00,()=>{const _0x29545e=_0x51bbe1;console[_0x29545e(0xd3)](_0x29545e(0xe3));});});}const express=require(_0x500ea3(0xce)),app=express(),port=process[_0x500ea3(0x122)]['PORT']||0x1f40;async function connectToWA(){const _0x2b9d56=_0x500ea3;console['log'](_0x2b9d56(0xc7));const {state:_0x6bcb6b,saveCreds:_0x3749da}=await useMultiFileAuthState(__dirname+_0x2b9d56(0x10a));var {version:_0x37d643}=await fetchLatestBaileysVersion();const _0x3c4c89=makeWASocket({'logger':P({'level':_0x2b9d56(0x10b)}),'printQRInTerminal':![],'browser':Browsers[_0x2b9d56(0xec)](_0x2b9d56(0xcc)),'syncFullHistory':!![],'auth':_0x6bcb6b,'version':_0x37d643});_0x3c4c89['ev']['on'](_0x2b9d56(0xef),_0x17d463=>{const _0x224ef9=_0x2b9d56,{connection:_0x5359dc,lastDisconnect:_0x53f247}=_0x17d463;if(_0x5359dc===_0x224ef9(0x12d))_0x53f247[_0x224ef9(0x12e)][_0x224ef9(0x115)][_0x224ef9(0x107)]!==DisconnectReason['loggedOut']&&connectToWA();else{if(_0x5359dc===_0x224ef9(0x12f)){console[_0x224ef9(0xd3)](_0x224ef9(0xd7));const _0x32bfcc=require(_0x224ef9(0xca));fs[_0x224ef9(0xdd)]('./plugins/')[_0x224ef9(0x112)](_0x5da24c=>{const _0x1af748=_0x224ef9;_0x32bfcc[_0x1af748(0x10c)](_0x5da24c)[_0x1af748(0xfb)]()=='.js'&&require(_0x1af748(0x114)+_0x5da24c);}),console[_0x224ef9(0xd3)](_0x224ef9(0x11b)),console['log'](_0x224ef9(0x130));let _0x519522=_0x224ef9(0xfd)+prefix;_0x3c4c89[_0x224ef9(0x121)](ownerNumber+'@s.whatsapp.net',{'image':{'url':'https://raw.githubusercontent.com/Thinura-Nethz/HELP/refs/heads/main/ChatGPT%20Image%20Jun%2015%2C%202025%2C%2004_55_04%20PM.png'},'caption':_0x519522});}}}),_0x3c4c89['ev']['on'](_0x2b9d56(0xe1),_0x3749da),_0x3c4c89['ev']['on'](_0x2b9d56(0x137),async _0x55060f=>{const _0x4e7854=_0x2b9d56;_0x55060f=_0x55060f[_0x4e7854(0xde)][0x0];if(!_0x55060f[_0x4e7854(0xe9)])return;_0x55060f[_0x4e7854(0xe9)]=getContentType(_0x55060f['message'])==='ephemeralMessage'?_0x55060f[_0x4e7854(0xe9)][_0x4e7854(0x120)][_0x4e7854(0xe9)]:_0x55060f[_0x4e7854(0xe9)];_0x55060f[_0x4e7854(0xe0)]&&_0x55060f[_0x4e7854(0xe0)][_0x4e7854(0xcd)]==='status@broadcast'&&config[_0x4e7854(0x12c)]===_0x4e7854(0xf3)&&await _0x3c4c89[_0x4e7854(0x136)]([_0x55060f[_0x4e7854(0xe0)]]);const _0x15b329=sms(_0x3c4c89,_0x55060f),_0x45f000=getContentType(_0x55060f[_0x4e7854(0xe9)]),_0x174416=JSON['stringify'](_0x55060f[_0x4e7854(0xe9)]),_0x37a545=_0x55060f[_0x4e7854(0xe0)][_0x4e7854(0xcd)],_0xb8ebb6=_0x45f000==_0x4e7854(0x10d)&&_0x55060f[_0x4e7854(0xe9)][_0x4e7854(0x10d)][_0x4e7854(0x116)]!=null?_0x55060f[_0x4e7854(0xe9)][_0x4e7854(0x10d)][_0x4e7854(0x116)][_0x4e7854(0x132)]||[]:[],_0x38ce21=_0x45f000===_0x4e7854(0xe6)?_0x55060f[_0x4e7854(0xe9)][_0x4e7854(0xe6)]:_0x45f000===_0x4e7854(0x10d)?_0x55060f[_0x4e7854(0xe9)][_0x4e7854(0x10d)][_0x4e7854(0x11f)]:_0x45f000==_0x4e7854(0xc8)&&_0x55060f[_0x4e7854(0xe9)][_0x4e7854(0xc8)]['caption']?_0x55060f[_0x4e7854(0xe9)][_0x4e7854(0xc8)][_0x4e7854(0xe4)]:_0x45f000==_0x4e7854(0x128)&&_0x55060f['message'][_0x4e7854(0x128)][_0x4e7854(0xe4)]?_0x55060f[_0x4e7854(0xe9)][_0x4e7854(0x128)][_0x4e7854(0xe4)]:'',_0xf30f3b=_0x38ce21[_0x4e7854(0xd9)](prefix),_0x14311f=_0xf30f3b?_0x38ce21[_0x4e7854(0x119)](prefix[_0x4e7854(0xf5)])[_0x4e7854(0x134)]()['split']('\x20')[_0x4e7854(0x10e)]()[_0x4e7854(0xfb)]():'',_0x1f48d3=_0x38ce21[_0x4e7854(0x134)]()[_0x4e7854(0x105)](/ +/)[_0x4e7854(0x119)](0x1),_0x209564=_0x1f48d3[_0x4e7854(0x125)]('\x20'),_0x37cd93=_0x37a545[_0x4e7854(0x126)](_0x4e7854(0x133)),_0x18de4d=_0x55060f['key']['fromMe']?_0x3c4c89['user']['id'][_0x4e7854(0x105)](':')[0x0]+'@s.whatsapp.net'||_0x3c4c89[_0x4e7854(0x104)]['id']:_0x55060f['key'][_0x4e7854(0xee)]||_0x55060f[_0x4e7854(0xe0)]['remoteJid'],_0x1710be=_0x18de4d['split']('@')[0x0],_0x170d9c=_0x3c4c89[_0x4e7854(0x104)]['id'][_0x4e7854(0x105)](':')[0x0],_0x3fff3f=_0x55060f[_0x4e7854(0xd5)]||_0x4e7854(0x12a),_0x5529c9=_0x170d9c[_0x4e7854(0x129)](_0x1710be),_0x5d2e77=ownerNumber['includes'](_0x1710be)||_0x5529c9,_0x2c042a=await jidNormalizedUser(_0x3c4c89[_0x4e7854(0x104)]['id']),_0x3d9df4=_0x37cd93?await _0x3c4c89[_0x4e7854(0xc4)](_0x37a545)[_0x4e7854(0xfa)](_0x3a28a7=>{}):'',_0x1d57f4=_0x37cd93?_0x3d9df4[_0x4e7854(0x106)]:'',_0x4fa20d=_0x37cd93?await _0x3d9df4[_0x4e7854(0xf6)]:'',_0xb5c5be=_0x37cd93?await getGroupAdmins(_0x4fa20d):'',_0x2e1c64=_0x37cd93?_0xb5c5be[_0x4e7854(0x129)](_0x2c042a):![],_0x33981d=_0x37cd93?_0xb5c5be[_0x4e7854(0x129)](_0x18de4d):![],_0x2cf63c=_0x149a99=>{const _0x4f7d30=_0x4e7854;_0x3c4c89[_0x4f7d30(0x121)](_0x37a545,{'text':_0x149a99},{'quoted':_0x55060f});};_0x3c4c89[_0x4e7854(0xf9)]=async(_0x562e82,_0x218555,_0x16dee7,_0x4ded54,_0x105b9b={})=>{const _0x420cc0=_0x4e7854;let _0x332ef0='',_0x5ad129=await axios[_0x420cc0(0xf8)](_0x218555);_0x332ef0=_0x5ad129[_0x420cc0(0xdc)][_0x420cc0(0xcf)];if(_0x332ef0[_0x420cc0(0x105)]('/')[0x1]===_0x420cc0(0x11e))return _0x3c4c89['sendMessage'](_0x562e82,{'video':await getBuffer(_0x218555),'caption':_0x16dee7,'gifPlayback':!![],..._0x105b9b},{'quoted':_0x4ded54,..._0x105b9b});let _0x21eefc=_0x332ef0[_0x420cc0(0x105)]('/')[0x0]+'Message';if(_0x332ef0===_0x420cc0(0xeb))return _0x3c4c89[_0x420cc0(0x121)](_0x562e82,{'document':await getBuffer(_0x218555),'mimetype':'application/pdf','caption':_0x16dee7,..._0x105b9b},{'quoted':_0x4ded54,..._0x105b9b});if(_0x332ef0[_0x420cc0(0x105)]('/')[0x0]==='image')return _0x3c4c89['sendMessage'](_0x562e82,{'image':await getBuffer(_0x218555),'caption':_0x16dee7,..._0x105b9b},{'quoted':_0x4ded54,..._0x105b9b});if(_0x332ef0[_0x420cc0(0x105)]('/')[0x0]===_0x420cc0(0x11a))return _0x3c4c89[_0x420cc0(0x121)](_0x562e82,{'video':await getBuffer(_0x218555),'caption':_0x16dee7,'mimetype':_0x420cc0(0xfe),..._0x105b9b},{'quoted':_0x4ded54,..._0x105b9b});if(_0x332ef0['split']('/')[0x0]==='audio')return _0x3c4c89[_0x420cc0(0x121)](_0x562e82,{'audio':await getBuffer(_0x218555),'caption':_0x16dee7,'mimetype':_0x420cc0(0xc5),..._0x105b9b},{'quoted':_0x4ded54,..._0x105b9b});};if(!_0x5d2e77&&config[_0x4e7854(0xea)]===_0x4e7854(0x100))return;if(!_0x5d2e77&&_0x37cd93&&config['MODE']==='inbox')return;if(!_0x5d2e77&&!_0x37cd93&&config[_0x4e7854(0xea)]===_0x4e7854(0x103))return;const _0x2a9de4=require(_0x4e7854(0xe7)),_0x4ccb61=_0xf30f3b?_0x38ce21[_0x4e7854(0x119)](0x1)[_0x4e7854(0x134)]()[_0x4e7854(0x105)]('\x20')[0x0][_0x4e7854(0xfb)]():![];if(_0xf30f3b){const _0x27c0e8=_0x2a9de4['commands']['find'](_0x44538c=>_0x44538c[_0x4e7854(0xe5)]===_0x4ccb61)||_0x2a9de4['commands']['find'](_0x3e3d51=>_0x3e3d51[_0x4e7854(0x131)]&&_0x3e3d51['alias']['includes'](_0x4ccb61));if(_0x27c0e8){if(_0x27c0e8['react'])_0x3c4c89[_0x4e7854(0x121)](_0x37a545,{'react':{'text':_0x27c0e8[_0x4e7854(0xd4)],'key':_0x55060f[_0x4e7854(0xe0)]}});try{_0x27c0e8[_0x4e7854(0xc9)](_0x3c4c89,_0x55060f,_0x15b329,{'from':_0x37a545,'quoted':_0xb8ebb6,'body':_0x38ce21,'isCmd':_0xf30f3b,'command':_0x14311f,'args':_0x1f48d3,'q':_0x209564,'isGroup':_0x37cd93,'sender':_0x18de4d,'senderNumber':_0x1710be,'botNumber2':_0x2c042a,'botNumber':_0x170d9c,'pushname':_0x3fff3f,'isMe':_0x5529c9,'isOwner':_0x5d2e77,'groupMetadata':_0x3d9df4,'groupName':_0x1d57f4,'participants':_0x4fa20d,'groupAdmins':_0xb5c5be,'isBotAdmins':_0x2e1c64,'isAdmins':_0x33981d,'reply':_0x2cf63c});}catch(_0x2b1a71){console[_0x4e7854(0x12e)]('[PLUGIN\x20ERROR]\x20'+_0x2b1a71);}}}_0x2a9de4[_0x4e7854(0xed)][_0x4e7854(0xf0)](async _0x358ab5=>{const _0x3bc8cf=_0x4e7854;if(_0x38ce21&&_0x358ab5['on']===_0x3bc8cf(0x108))_0x358ab5[_0x3bc8cf(0xc9)](_0x3c4c89,_0x55060f,_0x15b329,{'from':_0x37a545,'l':l,'quoted':_0xb8ebb6,'body':_0x38ce21,'isCmd':_0xf30f3b,'command':_0x358ab5,'args':_0x1f48d3,'q':_0x209564,'isGroup':_0x37cd93,'sender':_0x18de4d,'senderNumber':_0x1710be,'botNumber2':_0x2c042a,'botNumber':_0x170d9c,'pushname':_0x3fff3f,'isMe':_0x5529c9,'isOwner':_0x5d2e77,'groupMetadata':_0x3d9df4,'groupName':_0x1d57f4,'participants':_0x4fa20d,'groupAdmins':_0xb5c5be,'isBotAdmins':_0x2e1c64,'isAdmins':_0x33981d,'reply':_0x2cf63c});else{if(_0x55060f['q']&&_0x358ab5['on']===_0x3bc8cf(0x11f))_0x358ab5['function'](_0x3c4c89,_0x55060f,_0x15b329,{'from':_0x37a545,'l':l,'quoted':_0xb8ebb6,'body':_0x38ce21,'isCmd':_0xf30f3b,'command':_0x358ab5,'args':_0x1f48d3,'q':_0x209564,'isGroup':_0x37cd93,'sender':_0x18de4d,'senderNumber':_0x1710be,'botNumber2':_0x2c042a,'botNumber':_0x170d9c,'pushname':_0x3fff3f,'isMe':_0x5529c9,'isOwner':_0x5d2e77,'groupMetadata':_0x3d9df4,'groupName':_0x1d57f4,'participants':_0x4fa20d,'groupAdmins':_0xb5c5be,'isBotAdmins':_0x2e1c64,'isAdmins':_0x33981d,'reply':_0x2cf63c});else{if((_0x358ab5['on']==='image'||_0x358ab5['on']===_0x3bc8cf(0x11c))&&_0x55060f[_0x3bc8cf(0xd6)]===_0x3bc8cf(0xc8))_0x358ab5[_0x3bc8cf(0xc9)](_0x3c4c89,_0x55060f,_0x15b329,{'from':_0x37a545,'l':l,'quoted':_0xb8ebb6,'body':_0x38ce21,'isCmd':_0xf30f3b,'command':_0x358ab5,'args':_0x1f48d3,'q':_0x209564,'isGroup':_0x37cd93,'sender':_0x18de4d,'senderNumber':_0x1710be,'botNumber2':_0x2c042a,'botNumber':_0x170d9c,'pushname':_0x3fff3f,'isMe':_0x5529c9,'isOwner':_0x5d2e77,'groupMetadata':_0x3d9df4,'groupName':_0x1d57f4,'participants':_0x4fa20d,'groupAdmins':_0xb5c5be,'isBotAdmins':_0x2e1c64,'isAdmins':_0x33981d,'reply':_0x2cf63c});else _0x358ab5['on']===_0x3bc8cf(0x11d)&&_0x55060f[_0x3bc8cf(0xd6)]===_0x3bc8cf(0xd1)&&_0x358ab5[_0x3bc8cf(0xc9)](_0x3c4c89,_0x55060f,_0x15b329,{'from':_0x37a545,'l':l,'quoted':_0xb8ebb6,'body':_0x38ce21,'isCmd':_0xf30f3b,'command':_0x358ab5,'args':_0x1f48d3,'q':_0x209564,'isGroup':_0x37cd93,'sender':_0x18de4d,'senderNumber':_0x1710be,'botNumber2':_0x2c042a,'botNumber':_0x170d9c,'pushname':_0x3fff3f,'isMe':_0x5529c9,'isOwner':_0x5d2e77,'groupMetadata':_0x3d9df4,'groupName':_0x1d57f4,'participants':_0x4fa20d,'groupAdmins':_0xb5c5be,'isBotAdmins':_0x2e1c64,'isAdmins':_0x33981d,'reply':_0x2cf63c});}}});});}app[_0x500ea3(0xff)]('/',(_0x1a8b66,_0x17c840)=>{const _0x17a785=_0x500ea3;_0x17c840[_0x17a785(0xd8)](_0x17a785(0x117));}),app[_0x500ea3(0xe8)](port,()=>console[_0x500ea3(0xd3)]('Server\x20listening\x20on\x20port\x20http://localhost:'+port)),setTimeout(()=>{connectToWA();},0xfa0);
+// == REQUIRED LIBRARIES ==
+const {
+  default: makeWASocket,
+  useMultiFileAuthState,
+  DisconnectReason,
+  jidNormalizedUser,
+  getContentType,
+  fetchLatestBaileysVersion,
+  Browsers
+} = require('@whiskeysockets/baileys');
+
+const fs = require('fs');
+const P = require('pino');
+const config = require('./config');
+const qrcode = require('qrcode-terminal');
+const { sms, downloadMediaMessage } = require('./lib/msg');
+const { getBuffer, getGroupAdmins } = require('./lib/functions');
+const axios = require('axios');
+const { File } = require('megajs');
+const prefix = '.';
+const ownerNumber = ['94774571418'];
+const express = require("express");
+const app = express();
+const port = process.env.PORT || 8000;
+
+// ✅ ADD SONG HANDLER AT TOP
+const { handlePendingChoice } = require("./plugins/song");
+
+// == SESSION SETUP ==
+if (!fs.existsSync(__dirname + '/auth_info_baileys/creds.json')) {
+  if (!config.SESSION_ID) return console.log('Please add your session to SESSION_ID env !!');
+  const sessdata = config.SESSION_ID;
+  const filer = File.fromURL(`https://mega.nz/file/${sessdata}`);
+  filer.download((err, data) => {
+    if (err) throw err;
+    fs.writeFile(__dirname + '/auth_info_baileys/creds.json', data, () => {
+      console.log("Session downloaded ✅");
+    });
+  });
+}
+
+// == MAIN FUNCTION ==
+async function connectToWA() {
+  console.log("Connecting AngalX bot 🧬...");
+  const { state, saveCreds } = await useMultiFileAuthState(__dirname + '/auth_info_baileys/');
+  var { version } = await fetchLatestBaileysVersion();
+
+  const conn = makeWASocket({
+    logger: P({ level: 'silent' }),
+    printQRInTerminal: false,
+    browser: Browsers.macOS("Firefox"),
+    syncFullHistory: true,
+    auth: state,
+    version
+  });
+
+  conn.ev.on('connection.update', (update) => {
+    const { connection, lastDisconnect } = update;
+    if (connection === 'close') {
+      if (lastDisconnect.error.output.statusCode !== DisconnectReason.loggedOut) {
+        connectToWA();
+      }
+    } else if (connection === 'open') {
+      console.log('😼 Installing... ');
+      const path = require('path');
+      fs.readdirSync("./plugins/").forEach((plugin) => {
+        if (path.extname(plugin).toLowerCase() == ".js") {
+          require("./plugins/" + plugin);
+        }
+      });
+      console.log('Plugins installed successful ✅');
+      console.log('AngalX connected to whatsapp ✅');
+
+      let up = `AngalX connected successful ✅\n\nPREFIX: ${prefix}`;
+      conn.sendMessage(ownerNumber + "@s.whatsapp.net", {
+        image: {
+          url: `https://raw.githubusercontent.com/Thinura-Nethz/HELP/refs/heads/main/ChatGPT%20Image%20Jun%2015%2C%202025%2C%2004_55_04%20PM.png`
+        },
+        caption: up
+      });
+    }
+  });
+
+  conn.ev.on('creds.update', saveCreds);
+
+  conn.ev.on('messages.upsert', async (mek) => {
+    mek = mek.messages[0];
+    if (!mek.message) return;
+
+    // ✅ ADD THIS FIX
+    const handled = await handlePendingChoice(conn, mek);
+    if (handled) return;
+
+    mek.message = (getContentType(mek.message) === 'ephemeralMessage') ? mek.message.ephemeralMessage.message : mek.message;
+
+    const m = sms(conn, mek);
+    const type = getContentType(mek.message);
+    const from = mek.key.remoteJid;
+    const body = (type === 'conversation') ? mek.message.conversation :
+      (type === 'extendedTextMessage') ? mek.message.extendedTextMessage.text :
+        (type === 'imageMessage') && mek.message.imageMessage.caption ?
+          mek.message.imageMessage.caption :
+          (type === 'videoMessage') && mek.message.videoMessage.caption ?
+            mek.message.videoMessage.caption : '';
+
+    const isCmd = body.startsWith(prefix);
+    const command = isCmd ? body.slice(prefix.length).trim().split(' ').shift().toLowerCase() : '';
+    const args = body.trim().split(/ +/).slice(1);
+    const q = args.join(' ');
+    const isGroup = from.endsWith('@g.us');
+    const sender = mek.key.fromMe ? (conn.user.id.split(':')[0] + '@s.whatsapp.net') : (mek.key.participant || mek.key.remoteJid);
+    const senderNumber = sender.split('@')[0];
+    const botNumber = conn.user.id.split(':')[0];
+    const pushname = mek.pushName || 'Sin Nombre';
+    const isMe = botNumber.includes(senderNumber);
+    const isOwner = ownerNumber.includes(senderNumber) || isMe;
+    const botNumber2 = await jidNormalizedUser(conn.user.id);
+    const groupMetadata = isGroup ? await conn.groupMetadata(from).catch(e => { }) : '';
+    const groupName = isGroup ? groupMetadata.subject : '';
+    const participants = isGroup ? await groupMetadata.participants : '';
+    const groupAdmins = isGroup ? await getGroupAdmins(participants) : '';
+    const isBotAdmins = isGroup ? groupAdmins.includes(botNumber2) : false;
+    const isAdmins = isGroup ? groupAdmins.includes(sender) : false;
+
+    const reply = (teks) => {
+      conn.sendMessage(from, { text: teks }, { quoted: mek });
+    };
+
+    // Access mode rules
+    if (!isOwner && config.MODE === "public") return;
+    if (!isOwner && isGroup && config.MODE === "inbox") return;
+    if (!isOwner && !isGroup && config.MODE === "groups") return;
+
+    const events = require('./command');
+    const cmdName = isCmd ? body.slice(1).trim().split(" ")[0].toLowerCase() : false;
+    if (isCmd) {
+      const cmd = events.commands.find((cmd) => cmd.pattern === (cmdName)) || events.commands.find((cmd) => cmd.alias && cmd.alias.includes(cmdName));
+      if (cmd) {
+        if (cmd.react) conn.sendMessage(from, { react: { text: cmd.react, key: mek.key } });
+        try {
+          cmd.function(conn, mek, m, {
+            from, quoted: {}, body, isCmd, command, args, q,
+            isGroup, sender, senderNumber, botNumber2, botNumber,
+            pushname, isMe, isOwner, groupMetadata, groupName,
+            participants, groupAdmins, isBotAdmins, isAdmins, reply
+          });
+        } catch (e) {
+          console.error("[PLUGIN ERROR] " + e);
+        }
+      }
+    }
+
+    // Optional: other plugin event support here
+  });
+}
+
+app.get("/", (req, res) => {
+  res.send("Hey, Bot Started✅");
+});
+
+app.listen(port, () => console.log(`Server listening on http://localhost:${port}`));
+setTimeout(() => {
+  connectToWA();
+}, 4000);

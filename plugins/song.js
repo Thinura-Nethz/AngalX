@@ -60,15 +60,17 @@ const handlePendingChoice = async (angal, m) => {
   if (!pendingChoices[from]) return false;
 
   const extractText = (msg) => {
-    return (
-      msg?.message?.conversation ||
-      msg?.message?.extendedTextMessage?.text ||
-      msg?.message?.buttonsResponseMessage?.selectedButtonId ||
-      msg?.message?.listResponseMessage?.singleSelectReply?.selectedRowId ||
-      msg?.message?.templateButtonReplyMessage?.selectedId ||
-      msg?.message?.interactiveResponseMessage?.body?.text ||
-      ""
-    ).trim().toLowerCase();
+    const types = [
+      msg?.message?.conversation,
+      msg?.message?.extendedTextMessage?.text,
+      msg?.message?.buttonsResponseMessage?.selectedButtonId,
+      msg?.message?.listResponseMessage?.singleSelectReply?.selectedRowId,
+      msg?.message?.templateButtonReplyMessage?.selectedId,
+      msg?.message?.interactiveResponseMessage?.body?.text,
+    ];
+
+    const text = types.find(Boolean) || "";
+    return text.trim().toLowerCase().replace(/[^a-z0-9]/gi, "");
   };
 
   const choice = extractText(m);
@@ -82,12 +84,12 @@ const handlePendingChoice = async (angal, m) => {
       text: "❌ Invalid choice. Reply with `1` (Document) or `2` (Audio)."
     }, { quoted: m });
 
-    delete pendingChoices[from]; // Prevent future spam
+    delete pendingChoices[from];
     return true;
   }
 
   const { songData, data, mek } = pendingChoices[from];
-  delete pendingChoices[from]; // ✅ Clean after handling
+  delete pendingChoices[from];
 
   try {
     await angal.sendMessage(

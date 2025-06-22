@@ -2,7 +2,7 @@ const { cmd } = require("../command");
 const yts = require("yt-search");
 const { ytmp3 } = require("@vreden/youtube_scraper");
 
-const pendingChoices = {}; // Store pending song replies
+const pendingChoices = {};
 
 // === SONG COMMAND ===
 cmd(
@@ -30,10 +30,14 @@ cmd(
 
       const songData = await ytmp3(data.url, "128");
 
-      await angal.sendMessage(from, {
-        image: { url: data.thumbnail },
-        caption: `🎶 *ANGAL-X MP3 DOWNLOADER*\n\n📌 *Title:* ${data.title}\n🕒 *Duration:* ${data.timestamp}\n🔗 *URL:* ${data.url}\n\n_Reply with:_\n1️⃣ = Document\n2️⃣ = Audio`,
-      }, { quoted: mek });
+      await angal.sendMessage(
+        from,
+        {
+          image: { url: data.thumbnail },
+          caption: `🎶 *ANGAL-X MP3 DOWNLOADER*\n\n📌 *Title:* ${data.title}\n🕒 *Duration:* ${data.timestamp}\n🔗 *URL:* ${data.url}\n\n_Reply with:_\n\n1️⃣ = 📁 Document\n2️⃣ = 🎵 Audio`,
+        },
+        { quoted: mek }
+      );
 
       pendingChoices[from] = {
         songData,
@@ -78,7 +82,7 @@ const handlePendingChoice = async (angal, m) => {
       text: "❌ Invalid choice. Reply with `1` (Document) or `2` (Audio)."
     }, { quoted: m });
 
-    delete pendingChoices[from]; // 🧹 Clean to avoid spam
+    delete pendingChoices[from]; // Prevent future spam
     return true;
   }
 

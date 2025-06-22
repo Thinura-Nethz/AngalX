@@ -66,22 +66,31 @@ const handlePendingChoice = async (angal, m) => {
         message.templateButtonReplyMessage?.selectedId,
         message.interactiveResponseMessage?.body?.text,
       ];
-      return textSources.find((x) => typeof x === "string" && x.trim().length <= 10)?.trim().toLowerCase() || "";
+      return textSources.find((x) => typeof x === "string" && x.trim().length <= 20)?.trim().toLowerCase() || "";
     } catch (err) {
       console.error("Text extraction error:", err);
       return "";
     }
   };
 
-  const choice = extractText(m);
-  console.log("[PendingChoice] User replied:", choice);
+  // Normalize emoji/text
+  const normalize = (txt) =>
+    txt
+      .replace(/1️⃣|one|document/i, "1")
+      .replace(/2️⃣|two|audio/i, "2")
+      .replace(/[^\w\d]/g, "") // remove emojis or symbols
+      .trim();
 
-  const isDoc = choice === "1" || choice === "document";
-  const isAud = choice === "2" || choice === "audio";
+  const rawChoice = extractText(m);
+  const choice = normalize(rawChoice);
+  console.log("[PendingChoice] User replied:", rawChoice, "→", choice);
+
+  const isDoc = choice === "1";
+  const isAud = choice === "2";
 
   if (!isDoc && !isAud) {
     await angal.sendMessage(from, {
-      text: "❌ Invalid choice. Reply with `1` (Document) or `2` (Audio)."
+      text: "❌ Invalid choice. Reply with 1 (Document) or 2 (Audio)."
     }, { quoted: m });
 
     delete pendingChoices[from];

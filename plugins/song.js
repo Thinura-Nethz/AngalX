@@ -59,16 +59,14 @@ const handlePendingChoice = async (angal, m) => {
     try {
       const message = msg.message || {};
       const textSources = [
-        message?.conversation,
-        message?.extendedTextMessage?.text,
-        message?.buttonsResponseMessage?.selectedButtonId,
-        message?.listResponseMessage?.singleSelectReply?.selectedRowId,
-        message?.templateButtonReplyMessage?.selectedId,
-        message?.interactiveResponseMessage?.body?.text,
+        message.conversation,
+        message.extendedTextMessage?.text,
+        message.buttonsResponseMessage?.selectedButtonId,
+        message.listResponseMessage?.singleSelectReply?.selectedRowId,
+        message.templateButtonReplyMessage?.selectedId,
+        message.interactiveResponseMessage?.body?.text,
       ];
-
-      const extracted = textSources.find((x) => typeof x === "string" && x.trim().length === 1);
-      return extracted ? extracted.trim() : "";
+      return textSources.find((x) => typeof x === "string" && x.trim().length <= 10)?.trim().toLowerCase() || "";
     } catch (err) {
       console.error("Text extraction error:", err);
       return "";

@@ -23,7 +23,7 @@ const express = require("express");
 const app = express();
 const port = process.env.PORT || 8000;
 
-// ✅ IMPORT SONG FORMAT HANDLER
+// ✅ SONG HANDLER
 const { handlePendingChoice } = require("./plugins/song");
 
 // == SESSION SETUP ==
@@ -54,7 +54,6 @@ async function connectToWA() {
     version
   });
 
-  // Handle disconnections
   conn.ev.on('connection.update', async (update) => {
     const { connection, lastDisconnect } = update;
 
@@ -85,23 +84,23 @@ async function connectToWA() {
 
   conn.ev.on('creds.update', saveCreds);
 
-  // == MAIN MESSAGE HANDLER ==
+  // == MESSAGE HANDLER ==
   conn.ev.on('messages.upsert', async (msg) => {
     let mek = msg.messages[0];
     if (!mek.message) return;
 
     const from = mek.key.remoteJid;
 
-    // ✅ Handle replies for song format (1/2)
-    const wasHandled = await handlePendingChoice(conn, mek);
-    if (wasHandled) return;
+    // ✅ Handle reply to .song (1 or 2)
+    const handled = await handlePendingChoice(conn, mek);
+    if (handled) return;
 
-    // ✅ If message is ephemeral
+    // Process ephemeral message
     if (getContentType(mek.message) === 'ephemeralMessage') {
       mek.message = mek.message.ephemeralMessage.message;
     }
 
-    // Format message structure
+    // Format for plugins
     const m = sms(conn, mek);
     const type = getContentType(mek.message);
     const body =
@@ -112,11 +111,11 @@ async function connectToWA() {
       '';
 
     const isCmd = body.startsWith(prefix);
-    const command = isCmd ? body.slice(prefix.length).split(' ')[0].toLowerCase() : '';
+    const command = isCmd ? body.slice(prefix.length).trim().split(' ')[0].toLowerCase() : '';
     const args = body.trim().split(/\s+/).slice(1);
     const q = args.join(" ");
 
-    // Group + User Info
+    // Group & user info
     const isGroup = from.endsWith('@g.us');
     const sender = mek.key.fromMe ? conn.user.id.split(':')[0] + '@s.whatsapp.net' : (mek.key.participant || from);
     const senderNumber = sender.split('@')[0];
@@ -135,12 +134,12 @@ async function connectToWA() {
 
     const reply = (text) => conn.sendMessage(from, { text }, { quoted: mek });
 
-    // MODE Access
+    // Access rules
     if (!isOwner && config.MODE === "public") return;
     if (!isOwner && isGroup && config.MODE === "inbox") return;
     if (!isOwner && !isGroup && config.MODE === "groups") return;
 
-    // Command Execution
+    // Plugin Commands
     const events = require('./command');
     const cmdName = isCmd ? body.slice(1).split(" ")[0].toLowerCase() : false;
     if (isCmd) {
@@ -163,12 +162,12 @@ async function connectToWA() {
   });
 }
 
-// == EXPRESS API ==
+// == EXPRESS ENDPOINT ==
 app.get("/", (req, res) => {
   res.send("🤖 AngalX Bot is running.");
 });
 
-app.listen(port, () => console.log(`🌐 Server running at http://localhost:${port}`));
+app.listen(port, () => console.log(`🌐 Server live: http://localhost:${port}`));
 
 // == START BOT ==
 setTimeout(() => {

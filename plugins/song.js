@@ -2,50 +2,43 @@ const { cmd } = require("../command");
 const yts = require("yt-search");
 const { ytmp3 } = require("@vreden/youtube_scraper");
 
-cmd(
-  {
-    pattern: "song",
-    react: "🎵",
-    desc: "Download Song",
-    category: "download",
-    filename: __filename,
-  },
-  async (
-    conn,
-    mek,
-    m,
-    {
+cmd({
+  pattern: "song",
+  react: "🎵",
+  desc: "Download Song",
+  category: "download",
+  filename: __filename,
+},
+async (
+  conn,
+  mek,
+  m,
+  { from, q, reply }
+) => {
+  try {
+    if (!q) return reply("*Please provide a YouTube link or song name* 😑");
+
+    const search = await yts(q);
+    const data = search.videos[0];
+    const url = data.url;
+
+    const caption = `🎶 *ANGAL-X MP3 DOWNLOADER*\n\n📌 *Title*: ${data.title}\n🕒 *Duration*: ${data.timestamp}\n🔗 *URL*: ${url}\n\n*Reply with:*\n1️⃣ = Document\n2️⃣ = Audio`;
+
+    await conn.sendMessage(
       from,
-      q,
-      reply,
-    }
-  ) => {
-    try {
-      if (!q) return reply("*Please provide a YouTube link or song name* 😑");
+      {
+        image: { url: data.thumbnail },
+        caption,
+      },
+      { quoted: mek }
+    );
 
-      const search = await yts(q);
-      const data = search.videos[0];
-      const url = data.url;
+    const quality = "128";
+    const songData = await ytmp3(url, quality);
 
-      // Description card
-      const caption = `🎶 *ANGAL-X MP3 DOWNLOADER*\n\n📌 *Title*: ${data.title}\n🕒 *Duration*: ${data.timestamp}\n🔗 *URL*: ${url}\n\n*Reply with:*\n1️⃣ = Document\n2️⃣ = Audio`;
-
-      // Send thumbnail + info
-      await conn.sendMessage(
-        from,
-        {
-          image: { url: data.thumbnail },
-          caption,
-        },
-        { quoted: mek }
-      );
-
-      // Download audio
-      const quality = "128";
-      const songData = await ytmp3(url, quality);
-
-      // Wait for reply
-      conn.ev.once("messages.upsert", async ({ messages }) => {
+    // Await user reply
+    conn.ev.once("messages.upsert", async ({ messages }) => {
+      try {
         const msg = messages[0];
         if (!msg || msg.key.fromMe || msg.key.remoteJid !== from) return;
 
@@ -75,10 +68,14 @@ cmd(
         } else {
           reply("❌ Invalid choice. Reply with 1 (Document) or 2 (Audio).");
         }
-      });
-    } catch (e) {
-      console.error("Song download error:", e);
-      reply(`❌ Error: ${e.message}`);
-    }
+      } catch (innerErr) {
+        console.error("Reply handling error:", innerErr);
+        reply("❌ Error receiving your reply.");
+      }
+    });
+
+  } catch (e) {
+    console.error("Song plugin error:", e);
+    reply(`❌ Error: ${e.message}`);
   }
-);
+});

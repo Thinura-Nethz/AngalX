@@ -2,9 +2,6 @@ const { cmd } = require("../command");
 const yts = require("yt-search");
 const { ytmp3 } = require("@vreden/youtube_scraper");
 
-const pendingChoices = {}; // Store pending song replies
-
-// === SONG COMMAND ===
 cmd(
   {
     pattern: "song",
@@ -13,123 +10,75 @@ cmd(
     category: "download",
     filename: __filename,
   },
-  async (angal, mek, m, { from, reply, q }) => {
+  async (
+    conn,
+    mek,
+    m,
+    {
+      from,
+      q,
+      reply,
+    }
+  ) => {
     try {
-      if (!q) return reply("🎧 Please enter a song name or YouTube link.");
+      if (!q) return reply("*Please provide a YouTube link or song name* 😑");
 
       const search = await yts(q);
       const data = search.videos[0];
-      if (!data) return reply("❌ Song not found.");
+      const url = data.url;
 
-      const parts = data.timestamp.split(":").map(Number);
-      const seconds = parts.length === 3
-        ? parts[0] * 3600 + parts[1] * 60 + parts[2]
-        : parts[0] * 60 + parts[1];
+      // Description card
+      const caption = `🎶 *ANGAL-X MP3 DOWNLOADER*\n\n📌 *Title*: ${data.title}\n🕒 *Duration*: ${data.timestamp}\n🔗 *URL*: ${url}\n\n*Reply with:*\n1️⃣ = Document\n2️⃣ = Audio`;
 
-      if (seconds > 1800) return reply("⏱️ Song too long. 30 min max.");
+      // Send thumbnail + info
+      await conn.sendMessage(
+        from,
+        {
+          image: { url: data.thumbnail },
+          caption,
+        },
+        { quoted: mek }
+      );
 
-      const songData = await ytmp3(data.url, "128");
+      // Download audio
+      const quality = "128";
+      const songData = await ytmp3(url, quality);
 
-      await angal.sendMessage(from, {
-        image: { url: data.thumbnail },
-        caption: `🎶 *ANGAL-X MP3 DOWNLOADER*\n\n📌 *Title:* ${data.title}\n🕒 *Duration:* ${data.timestamp}\n🔗 *URL:* ${data.url}\n\n_Reply with:_\n1️⃣ = Document\n2️⃣ = Audio`,
-      }, { quoted: mek });
+      // Wait for reply
+      conn.ev.once("messages.upsert", async ({ messages }) => {
+        const msg = messages[0];
+        if (!msg || msg.key.fromMe || msg.key.remoteJid !== from) return;
 
-      pendingChoices[from] = {
-        songData,
-        data,
-        mek,
-        created: Date.now(),
-      };
+        const userReply = msg.message?.conversation?.toLowerCase().trim();
 
-      console.log(`[song] Waiting for reply from: ${from}`);
+        if (userReply === "1" || userReply.includes("document")) {
+          await conn.sendMessage(
+            from,
+            {
+              document: { url: songData.download.url },
+              mimetype: "audio/mpeg",
+              fileName: `${data.title}.mp3`,
+            },
+            { quoted: mek }
+          );
+          reply("✅ Sent as *Document*");
+        } else if (userReply === "2" || userReply.includes("audio")) {
+          await conn.sendMessage(
+            from,
+            {
+              audio: { url: songData.download.url },
+              mimetype: "audio/mpeg",
+            },
+            { quoted: mek }
+          );
+          reply("✅ Sent as *Audio*");
+        } else {
+          reply("❌ Invalid choice. Reply with 1 (Document) or 2 (Audio).");
+        }
+      });
     } catch (e) {
-      console.error("SONG ERROR:", e);
-      reply("❌ Error downloading song.");
+      console.error("Song download error:", e);
+      reply(`❌ Error: ${e.message}`);
     }
   }
 );
-
-// === HANDLE FORMAT REPLY ===
-const handlePendingChoice = async (angal, m) => {
-  const from = m.key.remoteJid;
-  if (!pendingChoices[from]) return false;
-
-  const extractText = (msg) => {
-    try {
-      const message = msg.message || {};
-      const textSources = [
-        message.conversation,
-        message.extendedTextMessage?.text,
-        message.buttonsResponseMessage?.selectedButtonId,
-        message.listResponseMessage?.singleSelectReply?.selectedRowId,
-        message.templateButtonReplyMessage?.selectedId,
-        message.interactiveResponseMessage?.body?.text,
-      ];
-      return textSources.find((x) => typeof x === "string" && x.trim().length <= 20)?.trim().toLowerCase() || "";
-    } catch (err) {
-      console.error("Text extraction error:", err);
-      return "";
-    }
-  };
-
-  // Normalize emoji/text
-  const normalize = (txt) =>
-    txt
-      .replace(/1️⃣|one|document/i, "1")
-      .replace(/2️⃣|two|audio/i, "2")
-      .replace(/[^\w\d]/g, "") // remove emojis or symbols
-      .trim();
-
-  const rawChoice = extractText(m);
-  const choice = normalize(rawChoice);
-  console.log("[PendingChoice] User replied:", rawChoice, "→", choice);
-
-  const isDoc = choice === "1";
-  const isAud = choice === "2";
-
-  if (!isDoc && !isAud) {
-    await angal.sendMessage(from, {
-      text: "❌ Invalid choice. Reply with 1 (Document) or 2 (Audio)."
-    }, { quoted: m });
-
-    delete pendingChoices[from];
-    return true;
-  }
-
-  const { songData, data, mek } = pendingChoices[from];
-  delete pendingChoices[from];
-
-  try {
-    await angal.sendMessage(
-      from,
-      isDoc
-        ? {
-            document: { url: songData.download.url },
-            mimetype: "audio/mpeg",
-            fileName: `${data.title}.mp3`,
-          }
-        : {
-            audio: { url: songData.download.url },
-            mimetype: "audio/mpeg",
-          },
-      { quoted: mek }
-    );
-
-    await angal.sendMessage(from, {
-      text: `✅ Sent as ${isDoc ? "📁 Document" : "🎵 Audio"}!`,
-    }, { quoted: m });
-
-    return true;
-  } catch (err) {
-    console.error("SEND ERROR:", err);
-    await angal.sendMessage(from, {
-      text: "❌ Error sending the song file.",
-    }, { quoted: m });
-    return true;
-  }
-};
-
-module.exports = {
-  handlePendingChoice,
-};
